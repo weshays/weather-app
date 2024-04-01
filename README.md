@@ -19,7 +19,7 @@ This project is meant to run in a docker container.
 Clone the project to your local machine.
 
 ```
-git clone ...
+git clone git@github.com:weshays/weather-app.git
 ```
 
 ### Build the project
@@ -55,16 +55,31 @@ If successful you should see a HelloWorld page
 
 ## NOTES
 
-Build the app in the container without having to install/upgrade Python or Django on your local machine.
+Build the *project* in the container without having to install/upgrade Python or Django on your local machine.
 
 ```
 docker-compose build
 docker-compose run --rm app sh -c "django-admin startproject app ."
 ```
 
+Build an *app* in the container without having to install/upgrade Python or Django on your local machine.
+
+```
+# docker-compose run --rm app sh -c "python manage.py startapp [app_name]"
+docker-compose run --rm app sh -c "python manage.py startapp temperature"
+```
+
 ## Run migrations
 
-You can run migrations outside of the container by running the following command.
+You can run migrations inside the container by logging into the container and running the following commands.
+
+```
+docker exec -it weather-app bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+Or, you can run migrations outside of the container by running the following command.
 
 ```
 docker-compose run --rm app sh -c "python manage.py makemigrations"

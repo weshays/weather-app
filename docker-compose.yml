@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  # db:
+  #   container_name: "weather-postgres"
+  #   platform: linux/x86_64
+  #   image: postgres:latest
+  #   environment:
+  #     POSTGRES_USER: weather
+  #     POSTGRES_PASSWORD: weather
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - "weather_dbdata:/var/lib/postgresql/data"
+
+  app:
+    container_name: "weather-app"
+    platform: linux/x86_64
+    build: .
+    command: python manage.py runserver  0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    # depends_on:
+    #   - db
+    # environment:
+    #   POSTGRES_USER: weather
+    #   POSTGRES_PASSWORD: weather
+    #   POSTGRES_HOST: db
+    volumes:
+      - .:/app
+    working_dir: /app
+    # Keeps the stdin open, so we can attach to our app container's process and
+    # do stuff such as `byebug` or `binding.pry`:
+    stdin_open: true
+    # Allows us to send signals (CTRL+C, CTRL+P + CTRL+Q) into the container
+    tty: true
+
+# volumes:
+#   weather_dbdata:

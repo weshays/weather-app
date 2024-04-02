@@ -19,5 +19,15 @@
     <br>
     <button onclick="sendServerStatusCheck()">Send ping to the server!</button>
     <h4 id="ServerStatusCode">Server response: Not Checked</h4>
+    <form method="POST" enctype="multipart/form-data">
+ 
+        <!-- Security token -->
+        {% csrf_token %}
+     
+        <!-- Using the formset -->
+        {{ form.as_p }}
+         
+        <input type="submit" value="Submit">
+    </form>
 </body>
 </html>

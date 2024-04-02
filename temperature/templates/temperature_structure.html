@@ -6,7 +6,7 @@
     <title>Index Page</title>
 </head>
 <body>
-    <h1>Temperature Data {{Date}}</h1>
-    <h3>Hey {{name}}! It might be hot today...</h3>
+    <h1>What's the weather stats in {{ fetch_temperature_data.0 }}, {{ fetch_temperature_data.1 }}? </h1>
+    <h3>It's going to be {{ fetch_temperature_data.2 }}{{ fetch_temperature_data.3 }} with a {{ fetch_temperature_data.4 }}% and wind speeds of {{ fetch_temperature_data.5 }} heading towards {{ fetch_temperature_data.6 }}</h3>
 </body>
 </html>

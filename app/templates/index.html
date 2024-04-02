@@ -6,7 +6,18 @@
     <title>Index Page</title>
 </head>
 <body>
+    <script>
+        function sendServerStatusCheck() {
+            var statusCode = fetch(window.location.href, {
+                method: "POST"
+            }).statusCode;
+            document.getElementById("ServerStatusCode").textContent = "Server response: " + toString(statusCode);
+        };
+    </script>
     <h1>Links</h1>
     <li><a href="/temperature">Temperature Data</a></li>
+    <br>
+    <button onclick="sendServerStatusCheck()">Send ping to the server!</button>
+    <h4 id="ServerStatusCode">Server response: Not Checked</h4>
 </body>
 </html>

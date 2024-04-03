@@ -1,0 +1,41 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index Page</title>
+</head>
+<body>
+    <h1>What's the weather stats in {{ fetch_temperature_data.0 }}, {{ fetch_temperature_data.1 }}? </h1>
+    <h3>It's going to be {{ fetch_temperature_data.2 }}{{ fetch_temperature_data.3 }} with a {{ fetch_temperature_data.4 }}% and wind speeds of {{ fetch_temperature_data.5 }} heading towards {{ fetch_temperature_data.6 }}</h3>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index Page</title>
+</head>
+<body>
+    <script>if (window.location.href.endsWith("temperature/") == false) {
+        window.location.href = "/temperature"
+    }</script>
+    {% if request.GET.error != None %}
+    <h5 style="color: red;">Error: {{ request.GET.error }}</h5>
+    {% endif %}
+    <h4>Current Rooms</h4>
+    {% if rooms|length == 0 %}
+    <h1>There are no active rooms.</h1>
+    {% endif %}
+    <ul id="weather-stats">
+        {% for item in rooms %}
+        <script>
+                document.getElementById("weather-stats").innerHTML += "<li>" + "{{ item }} <a href='{{ item }}'>view</a> <a href='edit/{{ item }}'>edit</a> <a href='delete/{{ item }}'>delete</a>" + "</li>";
+        </script>
+        {% endfor %}
+    </ul>
+    <a href="config/new">Create new room</a>
+</body>
+</html>

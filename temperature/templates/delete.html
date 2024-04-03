@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index Page</title>
+</head>
+<body>
+    {% if response != "proceed" %}
+    <h4>Unable to delete {{ id }}.</h4>
+    <p>This item may have already been deleted, or it may have never existed.</p>
+    <a href="/temperature">Back</a>
+    {% else %}
+    <script>window.location.href = "/temperature"</script>
+    {% endif %}
+</body>
+</html>

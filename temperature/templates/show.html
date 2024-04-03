@@ -6,6 +6,16 @@
     <title>Index Page</title>
 </head>
 <body>
-    Hello {{ temperature_id }}! <br>
+    {% if response == "proceed" %}
+    <h3>Room data for '{{ name }}'</h3>
+    <p>Temperature: {{ temperature }}</p>
+    <p>Distance from the kitchen: {{ distanceFromKitchen }}</p>
+    <a href="\temperature">Back</a>
+    {% else %}
+    <h3>No room named '{{ name }}' exists.</h3>
+    <a href="">Create {{ name }}</a>
+    <a href="">Refresh</a>
+    <a href="\temperature">Back</a>
+    {% endif %}
 </body>
 </html>

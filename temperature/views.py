@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render
-import requests, random
+import requests, random, os, json
 # Create your views here.
 
 def getIPData():
@@ -26,21 +26,54 @@ def fetch_temperature_data(request = "172.12.246.61"):
     windDirection = r["windDirection"]
     return [city,region_code,temperature,temperatureUnit,relativeHumidity,windSpeed,windDirection]
 
+def get_room_data():
+    return json.loads(open(f"{os.path.dirname(__file__)}/rooms.json","r").read())
+
+def write_room_data(data):
+    open(f"{os.path.dirname(__file__)}/rooms.json","w").write(json.dumps(data))
+
+def create_room(roomName, temperature, distanceFromKitchen):
+    data = get_room_data()
+
+    if roomName in data:
+        return "already exists."
+
+    data[roomName] = {"temperature":int(temperature),"distance_from_kitchen":int(distanceFromKitchen)}
+    write_room_data(data)
+
 # Create your views here.
 def index(request):
-    context = {"fetch_temperature_data":fetch_temperature_data(request)}
-    return render(request, 'index.html',context=context)
+    error_parameter = request.GET.get('error', None)
+    context = {"rooms":get_room_data(), "error_P":error_parameter}
+    return render(request, 'temperature_index.html',context=context)
 
 def show(request, id):
-    context = {"id": id}
+    data = get_room_data()
+    if id in data:
+        response = "proceed"
+        name = id.capitalize().replace("_"," ")
+        temperature = str(data[id]["temperature"]) + "°F"
+        distanceFromKitchen = str(data[id]["distance_from_kitchen"]) + "FT"
+    else:
+        response = "doesnt_exist"
+        name = id.capitalize().replace("_"," ")
+        temperature = "NUL"
+        distanceFromKitchen = "NUL"
+    
+    context = {"response":response,"name": name,"temperature":temperature,"distanceFromKitchen":distanceFromKitchen}
     return render(request, 'show.html',context=context)
 
 def new(request):
-    return render(request, 'new.html')
+    context = {"name":""}
+    return render(request, 'new.html', context=context)
 
-def create(request): # Post request
-    # redirect to index
-    return render(request, 'index.html')
+def create(request):
+    name = request.GET.get('name', None)
+    temp = request.GET.get('temp', None)
+    dist = request.GET.get('dist', None)
+    if not (name == None or temp == None or dist == None):
+        create_room(name, temp, dist)
+    return render(request, 'temperature_index.html')
 
 def edit(request, id): # Put request
     context = {"id": id}
@@ -53,8 +86,14 @@ def update(request, id):
     return render(request, 'index.html')
 
 def delete(request, id): # Delete request
-    context = {"id": id}
-    # return render(request, 'delete.html',context=context)
-    # Redirect to index in python django
-    return render(request, 'index.html')
+    
+    data = get_room_data()
+    if id not in data:
+        response = "item deleted already or item doesn't exist."
+    else:
+        response = "proceed"
+        del data[id]
+        write_room_data(data)
+    context = {"response":response,"id": id}
+    return render(request, 'delete.html', context=context)
 

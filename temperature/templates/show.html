@@ -10,6 +10,7 @@
     <h3>Room data for '{{ name }}'</h3>
     <p>Temperature: {{ temperature }}</p>
     <p>Distance from the kitchen: {{ distanceFromKitchen }}</p>
+    <a href="\temperature\{{ name }}\edit">Edit</a>
     <a href="\temperature">Back</a>
     {% else %}
     <h3>No room named '{{ name }}' exists.</h3>

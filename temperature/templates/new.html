@@ -3,34 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index Page</title>
+    <title>Create new room</title>
 </head>
 <body>
-    <form id="inputForm">
+    <h5 id="fillerError" style="color:red;"></h5>
+    <form id="inputForm" action="./create" method="post">
+        {% csrf_token %}
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name"><br><br>
-
+        <input type="text" id="name" name="name" value="{{ request.GET.name }}"><br><br>
+    
         <label for="temperature">Temperature:</label>
         <input type="number" id="temperature" name="temperature"><br><br>
-
-        <label for="distance">Distance:</label>
+    
+        <label for="distance">Distance from kitchen:</label>
         <input type="number" id="distance" name="distance"><br><br>
-
-        <button type="button" id="submitButton">Submit</button>
+    
+        <button type="submit" id="submitButton">Submit</button>
     </form>
+    
     <script>
-        const form = document.getElementById("inputForm");
-        const submitButton = document.getElementById('submitButton');
-        submitButton.addEventListener('click', () => {
-            var name = document.getElementById("name").value;
-            var temperature = document.getElementById("temperature").value;
-            var distance = document.getElementById("distance").value;
-            if (name !== "" && temperature !== "" && distance !== "") {
-                window.location.href = `/temperature/config/create?name=${encodeURIComponent(name)}&temp=${encodeURIComponent(temperature)}&dist=${encodeURIComponent(distance)}`
+        document.getElementById('submitButton').addEventListener('click', function(event) {
+            var form = document.getElementById('inputForm');
+            document.getElementById("fillerError").innerHTML = "";
+            if (document.getElementById("name").value != "" && document.getElementById("temperature").value != "" && document.getElementById("distance").value != "") {
+                var formData = new FormData(form);
+        
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
             } else {
-                alert("Please fill out all fields!");
-            };
+                document.getElementById("fillerError").innerHTML = "Please fill out all fields.";
+                event.preventDefault(); // Prevent form submission
+            }
         });
     </script>
+    
 </body>
 </html>

@@ -3,9 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index Page</title>
+    <title> Edit {{ id }}</title>
 </head>
 <body>
-    Hello (EDIT) {{ temperature_id }}! <br>
+    <h5 id="fillerError" style="color:red;"></h5>
+    <h3>Editing {{ id }}</h3>
+    <form id="inputForm">
+        {% csrf_token %}
+        <label for="temperature">Temperature:</label>
+        <input type="number" id="temperature" name="temperature" value="{{ temperature }}"><br><br>
+    
+        <label for="distance">Distance from kitchen:</label>
+        <input type="number" id="distance" name="distance" value="{{ distanceFromKitchen }}"><br><br>
+    
+        <button type="button" id="submitButton">Submit</button>
+    </form>
+    
+    <script>
+        document.getElementById('submitButton').addEventListener('click', function(event) {
+            var form = document.getElementById('inputForm');
+            var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+            document.getElementById("fillerError").innerHTML = "";
+            if (document.getElementById("temperature").value !== "" && document.getElementById("distance").value !== "") {
+                var formData = new FormData(form);
+                fetch(form.action, {
+                    method: 'PUT',
+                    headers: {
+                        'X-CSRFToken': csrfToken // Include CSRF token in request headers
+                    },
+                    body: formData
+                });
+            } else {
+                document.getElementById("fillerError").innerHTML = "Please fill out all fields.";
+                event.preventDefault(); // Prevent form submission
+            }
+            window.location.href = "/temperature"
+        });
+    </script>
+    
+    
 </body>
 </html>

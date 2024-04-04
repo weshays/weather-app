@@ -19,11 +19,18 @@
     <title>Index Page</title>
 </head>
 <body>
-    <script>if (window.location.href.endsWith("temperature/") == false) {
-        window.location.href = "/temperature"
-    }</script>
+    <script>
+        // Get the current URL without query parameters
+        const currentUrlWithoutParams = window.location.href.split("?")[0];
+    
+        // Check if the URL doesn't end with '/temperature'
+        if (!currentUrlWithoutParams.endsWith("/temperature") && (!currentUrlWithoutParams.endsWith("/temperature/"))) {
+            // Redirect to '/temperature'
+            window.location.href = "/temperature";
+        }
+    </script>
     {% if request.GET.error != None %}
-    <h5 style="color: red;">Error: {{ request.GET.error }}</h5>
+    <h5 style="color: red;" id="errorMsg">Error: {{ request.GET.error }} <a id="closeError" style="text-decoration: underline;">(close)</a></h5>
     {% endif %}
     <h4>Current Rooms</h4>
     {% if rooms|length == 0 %}
@@ -32,10 +39,14 @@
     <ul id="weather-stats">
         {% for item in rooms %}
         <script>
-                document.getElementById("weather-stats").innerHTML += "<li>" + "{{ item }} <a href='{{ item }}'>view</a> <a href='edit/{{ item }}'>edit</a> <a href='delete/{{ item }}'>delete</a>" + "</li>";
+                document.getElementById("weather-stats").innerHTML += "<li>" + "{{ item }} <a href='{{ item }}'>view</a> <a href='{{ item }}/edit'>edit</a> <a href='delete/{{ item }}'>delete</a>" + "</li>";
+                document.getElementById("closeError").addEventListener("click", function() {
+                    var element = document.getElementById("errorMsg");
+                    element.parentNode.removeChild(element);
+                });
         </script>
         {% endfor %}
     </ul>
-    <a href="config/new">Create new room</a>
+    <a href="/temperature/new">Create new room</a>
 </body>
 </html>
